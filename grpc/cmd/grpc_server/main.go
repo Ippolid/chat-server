@@ -20,8 +20,7 @@ type server struct {
 	chatserver_v1.UnimplementedAuthV1Server
 }
 
-// Get ...
-
+// Create chat
 func (s *server) Create(_ context.Context, req *chatserver_v1.CreateRequest) (*chatserver_v1.CreateResponse, error) {
 	//чето делается
 	fmt.Printf("name +%v\n", req.Usernames)
@@ -31,6 +30,7 @@ func (s *server) Create(_ context.Context, req *chatserver_v1.CreateRequest) (*c
 	}, nil
 }
 
+// Delete chat
 func (s *server) Delete(_ context.Context, req *chatserver_v1.DeleteRequest) (*emptypb.Empty, error) {
 	//чето делается
 	fmt.Printf("User id: %d", req.GetId())
@@ -38,6 +38,7 @@ func (s *server) Delete(_ context.Context, req *chatserver_v1.DeleteRequest) (*e
 	return &emptypb.Empty{}, nil
 }
 
+// SendMessage chat
 func (s *server) SendMessage(_ context.Context, req *chatserver_v1.SendMessageRequest) (*emptypb.Empty, error) {
 	//чето делается
 	fmt.Println(req.Message)
