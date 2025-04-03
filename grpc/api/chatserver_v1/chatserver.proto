@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package chat_server_v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+
+option go_package = "github.com/Ippolid/auth/tree/main/grpc/chatserver_v1;chatserver_v1";
+
+service AuthV1 {
+  rpc Create(CreateRequest) returns (CreateResponse);
+  rpc Delete(DeleteRequest) returns (google.protobuf.Empty);
+  rpc SendMessage(SendMessageRequest) returns (google.protobuf.Empty);
+}
+
+message MessageInfo {
+  string from = 1;
+  string text = 2;
+}
+
+//Create
+message CreateRequest {
+  repeated string usernames= 1;
+}
+
+message CreateResponse {
+  int64 id = 1;
+}
+
+//Delete
+message DeleteRequest {
+  int64 id = 1;
+}
+
+//SendMessage
+message SendMessageRequest{
+  MessageInfo message =1;
+  google.protobuf.Timestamp timestamp = 2;
+}
+
+
