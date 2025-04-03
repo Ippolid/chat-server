@@ -40,7 +40,7 @@ func (s *server) Delete(_ context.Context, req *chatserver_v1.DeleteRequest) (*e
 
 func (s *server) SendMessage(_ context.Context, req *chatserver_v1.SendMessageRequest) (*emptypb.Empty, error) {
 	//чето делается
-	fmt.Printf("User id: %d", req.Message, req.Timestamp)
+	fmt.Println(req.Message)
 
 	return &emptypb.Empty{}, nil
 }
