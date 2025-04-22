@@ -55,119 +55,57 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSHKEY }}
           envs: IMAGE_NAME_SERVER,IMAGE_NAME_MIGRATOR,REGISTRY,GITHUB_SHA,CONTAINER_NAME,PG_CONTAINER_NAME,PG_VOLUME_NAME,PG_DB,PG_USER,PG_PASSWORD,PG_PORT
-#          script: |
-#            TAG_NAME=$(echo $GITHUB_SHA | head -c7)
-#
-#            # Авторизация в реестре
-#            docker login -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }} $REGISTRY
-#
-#            # Создаем volume и сеть (если еще не созданы)
-#            docker volume create $PG_VOLUME_NAME || true
-#            docker network create pg-network-chat || true
-#
-#            if [ "$(docker ps -q -f name=^$PG_CONTAINER_NAME$)" ]; then
-#            echo "Контейнер $PG_CONTAINER_NAME уже запущен."
-#            elif [ "$(docker ps -aq -f name=^$PG_CONTAINER_NAME$)" ]; then
-#            echo "Контейнер $PG_CONTAINER_NAME существует, запускаем его..."
-#            docker start $PG_CONTAINER_NAME
-#            else
-#            echo "Создаем новый контейнер $PG_CONTAINER_NAME..."
-#            docker run -d \
-#            --name $PG_CONTAINER_NAME \
-#            --network pg-network-chat \
-#            -e POSTGRES_DB=$PG_DB \
-#            -e POSTGRES_USER=$PG_USER \
-#            -e POSTGRES_PASSWORD=$PG_PASSWORD \
-#            -v $PG_VOLUME_NAME:/var/lib/postgresql/data \
-#            -p $PG_PORT:5432 \
-#            postgres:14-alpine3.17
-#            fi
-#
-#            # Выполнение миграций (хост базы данных — имя контейнера PostgreSQL, порт внутри сети 5432)
-#            docker run --rm \
-#            --network pg-network-chat \
-#            -e DB_HOST=$PG_CONTAINER_NAME \
-#            -e DB_PORT=5432 \
-#            $REGISTRY/$IMAGE_NAME_MIGRATOR:$TAG_NAME
-#
-#            # Принудительное удаление старого контейнера сервиса (если существует)
-#            docker rm -f $CONTAINER_NAME || true
-#
-#            # Запускаем новый контейнер основного сервиса
-#            docker run -d \
-#            --network pg-network-chat \
-#            -p 50052:50052 \
-#            --name $CONTAINER_NAME \
-#            -e PG_HOST=$PG_CONTAINER_NAME \
-#            -e PG_PORT=5432 \
-#            -e DB_PORT=5432 \
-#            -e PG_USER=$PG_USER \
-#            -e PG_PASSWORD=$PG_PASSWORD \
-#            -e PG_DATABASE_NAME=$PG_DB \
-#            $REGISTRY/$IMAGE_NAME_SERVER:$TAG_NAME
-#
-#            # Отладка: Вывод логов (можно убрать, если не требуется постоянный вывод)
-#            echo "Логи сервера:"
-#            docker logs $CONTAINER_NAME
           script: |
             TAG_NAME=$(echo $GITHUB_SHA | head -c7)
-          
+
             # Авторизация в реестре
             docker login -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }} $REGISTRY
-          
+
             # Создаем volume и сеть (если еще не созданы)
             docker volume create $PG_VOLUME_NAME || true
             docker network create pg-network-chat || true
-          
-            # Проверка и запуск контейнера PostgreSQL
+
             if [ "$(docker ps -q -f name=^$PG_CONTAINER_NAME$)" ]; then
-              echo "Контейнер $PG_CONTAINER_NAME уже запущен."
+            echo "Контейнер $PG_CONTAINER_NAME уже запущен."
             elif [ "$(docker ps -aq -f name=^$PG_CONTAINER_NAME$)" ]; then
-              echo "Контейнер $PG_CONTAINER_NAME существует, запускаем его..."
-              docker start $PG_CONTAINER_NAME
+            echo "Контейнер $PG_CONTAINER_NAME существует, запускаем его..."
+            docker start $PG_CONTAINER_NAME
             else
-              echo "Создаем новый контейнер $PG_CONTAINER_NAME..."
-              docker run -d \
-                --name $PG_CONTAINER_NAME \
-                --network pg-network-chat \
-                -e POSTGRES_DB=$PG_DB \
-                -e POSTGRES_USER=$PG_USER \
-                -e POSTGRES_PASSWORD=$PG_PASSWORD \
-                -v $PG_VOLUME_NAME:/var/lib/postgresql/data \
-                -p $PG_PORT:5432 \
-                postgres:14-alpine3.17
+            echo "Создаем новый контейнер $PG_CONTAINER_NAME..."
+            docker run -d \
+            --name $PG_CONTAINER_NAME \
+            --network pg-network-chat \
+            -e POSTGRES_DB=$PG_DB \
+            -e POSTGRES_USER=$PG_USER \
+            -e POSTGRES_PASSWORD=$PG_PASSWORD \
+            -v $PG_VOLUME_NAME:/var/lib/postgresql/data \
+            -p $PG_PORT:5432 \
+            postgres:14-alpine3.17
             fi
-          
-            # Ждём готовности PostgreSQL
-            echo "⏳ Ожидаем готовности PostgreSQL..."
-            until docker exec $PG_CONTAINER_NAME pg_isready -U $PG_USER -d $PG_DB; do
-              echo "Postgres еще не готов, повтор через 2 секунды..."
-              sleep 2
-            done
-          
-            # Выполнение миграций
+
+            # Выполнение миграций (хост базы данных — имя контейнера PostgreSQL, порт внутри сети 5432)
             docker run --rm \
-              --network pg-network-chat \
-              -e DB_HOST=$PG_CONTAINER_NAME \
-              -e DB_PORT=5432 \
-              $REGISTRY/$IMAGE_NAME_MIGRATOR:$TAG_NAME
-          
+            --network pg-network-chat \
+            -e DB_HOST=$PG_CONTAINER_NAME \
+            -e DB_PORT=5432 \
+            $REGISTRY/$IMAGE_NAME_MIGRATOR:$TAG_NAME
+
             # Принудительное удаление старого контейнера сервиса (если существует)
             docker rm -f $CONTAINER_NAME || true
-          
+
             # Запускаем новый контейнер основного сервиса
             docker run -d \
-              --network pg-network-chat \
-              -p 50052:50052 \
-              --name $CONTAINER_NAME \
-              -e PG_HOST=$PG_CONTAINER_NAME \
-              -e PG_PORT=5432 \
-              -e DB_PORT=5432 \
-              -e PG_USER=$PG_USER \
-              -e PG_PASSWORD=$PG_PASSWORD \
-              -e PG_DATABASE_NAME=$PG_DB \
-              $REGISTRY/$IMAGE_NAME_SERVER:$TAG_NAME
-          
-            # Логи сервиса
+            --network pg-network-chat \
+            -p 50052:50052 \
+            --name $CONTAINER_NAME \
+            -e PG_HOST=$PG_CONTAINER_NAME \
+            -e PG_PORT=5432 \
+            -e DB_PORT=5432 \
+            -e PG_USER=$PG_USER \
+            -e PG_PASSWORD=$PG_PASSWORD \
+            -e PG_DATABASE_NAME=$PG_DB \
+            $REGISTRY/$IMAGE_NAME_SERVER:$TAG_NAME
+
+            # Отладка: Вывод логов (можно убрать, если не требуется постоянный вывод)
             echo "Логи сервера:"
             docker logs $CONTAINER_NAME
