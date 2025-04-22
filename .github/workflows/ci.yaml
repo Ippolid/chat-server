@@ -13,7 +13,7 @@ env:
   CONTAINER_NAME: "server-chat-container"
   PG_CONTAINER_NAME: "pg-local-chat"
   PG_VOLUME_NAME: "postgres_volume_local_chat"
-  PG_DB: "chat-server"
+  PG_DB: "chat"
   PG_USER: "chat-user"
   PG_PASSWORD: "chat-password"
   PG_PORT: "54322"
