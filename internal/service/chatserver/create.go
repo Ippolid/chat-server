@@ -1,35 +1,30 @@
-package auth
+package chatserver
 
 import (
 	"context"
 	"fmt"
+	"github.com/Ippolid/chat-server/internal/model"
 	"time"
-
-	"github.com/Ippolid/auth/internal/model"
 )
 
-func (s *serv) Create(ctx context.Context, info *model.User) (int64, error) {
+func (s *serv) Create(ctx context.Context, info *model.Chats) (int64, error) {
 	var id int64
 	err := s.txManager.ReadCommitted(ctx, func(ctx context.Context) error {
 		var errTx error
-		id, errTx = s.authRepository.CreateUser(ctx, *info)
+		id, errTx = s.chatserverRepository.CreateRequest(ctx, *info)
 		if errTx != nil {
 			return errTx
 		}
 
-		err := s.authRepository.MakeLog(ctx, model.Log{
+		err := s.chatserverRepository.MakeLog(ctx, model.Log{
 			Method:    "Create",
 			CreatedAt: time.Now(),
 			Ctx:       fmt.Sprintf("%v", ctx),
 		})
+
 		if err != nil {
 			return err
 		}
-		_, errTx = s.authRepository.GetUser(ctx, id)
-		if errTx != nil {
-			return errTx
-		}
-
 		return nil
 	})
 

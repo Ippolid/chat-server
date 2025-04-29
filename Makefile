@@ -34,9 +34,9 @@ get-deps:
 	go get -u google.golang.org/protobuf/cmd/protoc-gen-go
 	go get -u google.golang.org/grpc/cmd/protoc-gen-go-grpc
 
-generate: generate-auth-api
+generate: generate-chatserver-api
 
-generate-auth-api:
+generate-chatserver-api:
 	mkdir -p pkg/chatserver_v1
 	protoc --proto_path api/proto/chatserver_v1 \
 		--go_out=pkg/chatserver_v1 --go_opt=paths=source_relative \

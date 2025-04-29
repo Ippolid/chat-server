@@ -1,32 +1,26 @@
-package auth
+package chatserver
 
 import (
 	"context"
 	"fmt"
+	"github.com/Ippolid/chat-server/internal/model"
 	"time"
-
-	"github.com/Ippolid/auth/internal/model"
 )
 
 func (s *serv) Delete(ctx context.Context, id int64) error {
 	err := s.txManager.ReadCommitted(ctx, func(ctx context.Context) error {
-		errTx := s.authRepository.DeleteUser(ctx, id)
+		errTx := s.chatserverRepository.DeleteChat(ctx, id)
 		if errTx != nil {
 			return errTx
 		}
 
-		err := s.authRepository.MakeLog(ctx, model.Log{
+		err := s.chatserverRepository.MakeLog(ctx, model.Log{
 			Method:    "Delete",
 			CreatedAt: time.Now(),
 			Ctx:       fmt.Sprintf("%v", ctx),
 		})
 		if err != nil {
 			return err
-		}
-
-		_, errTx = s.authRepository.GetUser(ctx, id)
-		if errTx == nil {
-			return errTx
 		}
 
 		return nil

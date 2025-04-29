@@ -31,7 +31,7 @@ type repo struct {
 }
 
 // NewRepository создает новый экземпляр репозитория
-func NewRepository(db db.Client) repository.AuthRepository {
+func NewRepository(db db.Client) repository.ChatServerRepository {
 	return &repo{db: db}
 }
 

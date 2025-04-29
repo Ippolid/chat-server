@@ -1,21 +1,20 @@
-package auth
+package chatserver
 
 import (
 	"context"
 	"fmt"
+	"github.com/Ippolid/chat-server/internal/model"
 	"time"
-
-	"github.com/Ippolid/auth/internal/model"
 )
 
-func (s *serv) Update(ctx context.Context, id int64, info *model.UserInfo) error {
+func (s *serv) SendMessage(ctx context.Context, info *model.MessageInfo) error {
 	err := s.txManager.ReadCommitted(ctx, func(ctx context.Context) error {
-		errTx := s.authRepository.UpdateUser(ctx, id, *info)
+		errTx := s.chatserverRepository.SendMessage(ctx, *info)
 		if errTx != nil {
 			return errTx
 		}
 
-		err := s.authRepository.MakeLog(ctx, model.Log{
+		err := s.chatserverRepository.MakeLog(ctx, model.Log{
 			Method:    "Update",
 			CreatedAt: time.Now(),
 			Ctx:       fmt.Sprintf("%v", ctx),
