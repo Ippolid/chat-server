@@ -28,7 +28,6 @@ func (s *serv) Create(ctx context.Context, info *model.Chats) (int64, error) {
 		}
 		return nil
 	})
-
 	if err != nil {
 		return 0, err
 	}

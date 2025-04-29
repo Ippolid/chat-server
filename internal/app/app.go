@@ -80,7 +80,7 @@ func (a *App) initGRPCServer(ctx context.Context) error {
 
 	reflection.Register(a.grpcServer)
 
-	chatserver_v1.RegisterChatV1Server(a.grpcServer, a.serviceProvider.NoteImpl(ctx))
+	chatserver_v1.RegisterChatV1Server(a.grpcServer, a.serviceProvider.NoteController(ctx))
 
 	return nil
 }
@@ -95,6 +95,7 @@ func (a *App) runGRPCServer() error {
 
 	err = a.grpcServer.Serve(list)
 	if err != nil {
+		log.Printf("failed to serve grpc server: %v", err)
 		return err
 	}
 

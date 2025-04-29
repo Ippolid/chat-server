@@ -26,7 +26,7 @@ type serviceProvider struct {
 
 	noteService service.ChatServerService
 
-	noteImpl *chatserver.Controller
+	noteController *chatserver.Controller
 }
 
 func newServiceProvider() *serviceProvider {
@@ -106,10 +106,10 @@ func (s *serviceProvider) AuthService(ctx context.Context) service.ChatServerSer
 	return s.noteService
 }
 
-func (s *serviceProvider) NoteImpl(ctx context.Context) *chatserver.Controller {
-	if s.noteImpl == nil {
-		s.noteImpl = chatserver.NewController(s.AuthService(ctx))
+func (s *serviceProvider) NoteController(ctx context.Context) *chatserver.Controller {
+	if s.noteController == nil {
+		s.noteController = chatserver.NewController(s.AuthService(ctx))
 	}
 
-	return s.noteImpl
+	return s.noteController
 }

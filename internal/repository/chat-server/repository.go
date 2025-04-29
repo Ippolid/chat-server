@@ -92,7 +92,7 @@ func (r *repo) DeleteChat(ctx context.Context, id int64) error {
 	return nil
 }
 
-// DeleteUser удаляет пользователя по ID из базы данных
+// SendMessage отправляет сообщение, добавляя его данные (отправитель, текст, время отправки) в базу данных
 func (r *repo) SendMessage(ctx context.Context, message model.MessageInfo) error {
 	builder := sq.Insert(tableMessageName).
 		PlaceholderFormat(sq.Dollar).

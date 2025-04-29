@@ -16,8 +16,8 @@ func (i *Controller) Delete(ctx context.Context, req *chatserver_v1.DeleteReques
 	err := i.chatserverService.Delete(ctx, req.GetId())
 
 	if err != nil {
-		log.Printf("failed to delete user: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to delete user: %v", err)
+		log.Printf("failed to delete chat: %v", err)
+		return nil, status.Errorf(codes.Internal, "failed to delete chat: %v", err)
 	}
 
 	return &emptypb.Empty{}, nil

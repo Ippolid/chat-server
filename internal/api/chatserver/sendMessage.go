@@ -13,12 +13,10 @@ import (
 
 // SendMessage реализует метод получения пользователя по ID
 func (i *Controller) SendMessage(ctx context.Context, req *chatserver_v1.SendMessageRequest) (*emptypb.Empty, error) {
-
 	err := i.chatserverService.SendMessage(ctx, conventer.ToMessageFromService(req))
-
 	if err != nil {
-		log.Printf("failed to delete user: %v", err)
-		return nil, status.Errorf(codes.Internal, "failed to delete user: %v", err)
+		log.Printf("failed to send message: %v", err)
+		return nil, status.Errorf(codes.Internal, "failed to send message: %v", err)
 	}
 
 	return &emptypb.Empty{}, nil
