@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	tableChatName    = "chat"
+	tableChatName    = "chats"
 	tableMessageName = "messages"
 	tableLogName     = "logs"
 
@@ -128,7 +128,7 @@ func (r *repo) MakeLog(ctx context.Context, info model.Log) error {
 	}
 
 	q := db.Query{
-		Name:     "auth_repository.Log",
+		Name:     "chatserver_repository.Log",
 		QueryRaw: query,
 	}
 
