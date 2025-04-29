@@ -3,11 +3,12 @@ package app
 import (
 	"context"
 	"fmt"
+	"log"
+	"net"
+
 	"github.com/Ippolid/chat-server/internal/closer"
 	"github.com/Ippolid/chat-server/internal/config"
 	"github.com/Ippolid/chat-server/pkg/chatserver_v1"
-	"log"
-	"net"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"

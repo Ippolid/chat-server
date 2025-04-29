@@ -3,6 +3,7 @@ package chat_server
 import (
 	"context"
 	"fmt"
+
 	"github.com/Ippolid/chat-server/internal/client/db"
 	"github.com/Ippolid/chat-server/internal/model"
 	"github.com/Ippolid/chat-server/internal/repository"

@@ -3,9 +3,10 @@ package pg
 import (
 	"context"
 	"fmt"
+	"log"
+
 	"github.com/Ippolid/chat-server/internal/client/db"
 	"github.com/Ippolid/chat-server/internal/client/db/prettier"
-	"log"
 
 	"github.com/georgysavva/scany/v2/pgxscan"
 	"github.com/jackc/pgx/v5"

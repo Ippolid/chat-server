@@ -3,8 +3,9 @@ package chatserver
 import (
 	"context"
 	"fmt"
-	"github.com/Ippolid/chat-server/internal/model"
 	"time"
+
+	"github.com/Ippolid/chat-server/internal/model"
 )
 
 func (s *serv) SendMessage(ctx context.Context, info *model.MessageInfo) error {

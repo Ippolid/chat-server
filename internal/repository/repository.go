@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+
 	"github.com/Ippolid/chat-server/internal/model"
 )
 

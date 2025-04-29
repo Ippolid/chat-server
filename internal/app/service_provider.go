@@ -2,6 +2,8 @@ package app
 
 import (
 	"context"
+	"log"
+
 	"github.com/Ippolid/chat-server/internal/api/chatserver"
 	"github.com/Ippolid/chat-server/internal/client/db"
 	"github.com/Ippolid/chat-server/internal/client/db/pg"
@@ -12,7 +14,6 @@ import (
 	chat_server "github.com/Ippolid/chat-server/internal/repository/chat-server"
 	"github.com/Ippolid/chat-server/internal/service"
 	chat_service "github.com/Ippolid/chat-server/internal/service/chatserver"
-	"log"
 )
 
 type serviceProvider struct {

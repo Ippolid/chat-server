@@ -2,8 +2,9 @@ package main
 
 import (
 	"context"
-	"github.com/Ippolid/chat-server/internal/app"
 	"log"
+
+	"github.com/Ippolid/chat-server/internal/app"
 )
 
 func main() {

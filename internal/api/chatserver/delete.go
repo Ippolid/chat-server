@@ -2,8 +2,9 @@ package chatserver
 
 import (
 	"context"
-	"github.com/Ippolid/chat-server/pkg/chatserver_v1"
 	"log"
+
+	"github.com/Ippolid/chat-server/pkg/chatserver_v1"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

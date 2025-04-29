@@ -3,8 +3,9 @@ package chatserver
 import (
 	"context"
 	"fmt"
-	"github.com/Ippolid/chat-server/internal/model"
 	"time"
+
+	"github.com/Ippolid/chat-server/internal/model"
 )
 
 func (s *serv) Delete(ctx context.Context, id int64) error {
