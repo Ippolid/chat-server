@@ -3,6 +3,8 @@ package tests
 import (
 	"context"
 	"fmt"
+	"testing"
+
 	"github.com/Ippolid/chat-server/internal/model"
 	"github.com/Ippolid/chat-server/internal/repository"
 	repoMocks "github.com/Ippolid/chat-server/internal/repository/mocks"
@@ -12,8 +14,9 @@ import (
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/gojuno/minimock/v3"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
+
+const Delete = "Delete"
 
 func TestDelete(t *testing.T) {
 	type chatserverRepositoryMockFunc func(mc *minimock.Controller) repository.ChatServerRepository
@@ -49,7 +52,7 @@ func TestDelete(t *testing.T) {
 				mock := repoMocks.NewChatServerRepositoryMock(mc)
 				mock.DeleteChatMock.Expect(ctx, id).Return(nil)
 				mock.MakeLogMock.Set(func(_ context.Context, log model.Log) error {
-					if log.Method != "Delete" || log.Ctx != Ctxstring {
+					if log.Method != Delete || log.Ctx != Ctxstring {
 						return fmt.Errorf("unexpected log entry: %+v", log)
 					}
 					return nil
@@ -96,7 +99,7 @@ func TestDelete(t *testing.T) {
 				mock := repoMocks.NewChatServerRepositoryMock(mc)
 				mock.DeleteChatMock.Expect(ctx, id).Return(nil)
 				mock.MakeLogMock.Set(func(_ context.Context, log model.Log) error {
-					if log.Method != "Delete" || log.Ctx != Ctxstring {
+					if log.Method != Delete || log.Ctx != Ctxstring {
 						return fmt.Errorf("unexpected log entry: %+v", log)
 					}
 					return logErr

@@ -17,6 +17,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+const Sebdmessage = "SendMessage"
+
 func TestSendMessage(t *testing.T) {
 	type chatserverRepositoryMockFunc func(mc *minimock.Controller) repository.ChatServerRepository
 	type txManagerMockFunc func(mc *minimock.Controller) db.TxManager
@@ -55,7 +57,7 @@ func TestSendMessage(t *testing.T) {
 				mock := repoMocks.NewChatServerRepositoryMock(mc)
 				mock.SendMessageMock.Expect(ctx, *message).Return(nil)
 				mock.MakeLogMock.Set(func(_ context.Context, log model.Log) error {
-					if log.Method != "SendMessage" || log.Ctx != Ctxstring {
+					if log.Method != Sebdmessage || log.Ctx != Ctxstring {
 						return fmt.Errorf("unexpected log entry: %+v", log)
 					}
 					return nil
@@ -102,7 +104,7 @@ func TestSendMessage(t *testing.T) {
 				mock := repoMocks.NewChatServerRepositoryMock(mc)
 				mock.SendMessageMock.Expect(ctx, *message).Return(nil)
 				mock.MakeLogMock.Set(func(_ context.Context, log model.Log) error {
-					if log.Method != "SendMessage" || log.Ctx != Ctxstring {
+					if log.Method != Sebdmessage || log.Ctx != Ctxstring {
 						return fmt.Errorf("unexpected log entry: %+v", log)
 					}
 					return logErr

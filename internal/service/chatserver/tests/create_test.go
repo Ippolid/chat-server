@@ -18,6 +18,7 @@ import (
 )
 
 const Ctxstring = "context.Background"
+const Create = "Create"
 
 func TestCreate(t *testing.T) {
 	type chatserverRepositoryMockFunc func(mc *minimock.Controller) repository.ChatServerRepository
@@ -59,7 +60,7 @@ func TestCreate(t *testing.T) {
 				mock := repoMocks.NewChatServerRepositoryMock(mc)
 				mock.CreateRequestMock.Expect(ctx, *chats).Return(id, nil)
 				mock.MakeLogMock.Set(func(_ context.Context, log model.Log) error {
-					if log.Method != "Create" || log.Ctx != Ctxstring {
+					if log.Method != Create || log.Ctx != Ctxstring {
 						return fmt.Errorf("unexpected log entry: %+v", log)
 					}
 					return nil
@@ -108,7 +109,7 @@ func TestCreate(t *testing.T) {
 				mock := repoMocks.NewChatServerRepositoryMock(mc)
 				mock.CreateRequestMock.Expect(ctx, *chats).Return(id, nil)
 				mock.MakeLogMock.Set(func(_ context.Context, log model.Log) error {
-					if log.Method != "Create" || log.Ctx != Ctxstring {
+					if log.Method != Create || log.Ctx != Ctxstring {
 						return fmt.Errorf("unexpected log entry: %+v", log)
 					}
 					return logErr
