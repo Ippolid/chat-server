@@ -6,9 +6,9 @@ import (
 	"log"
 	"net"
 
-	"github.com/Ippolid/chat-server/internal/closer"
 	"github.com/Ippolid/chat-server/internal/config"
 	"github.com/Ippolid/chat-server/pkg/chatserver_v1"
+	"github.com/Ippolid/platform_libary/pkg/closer"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"

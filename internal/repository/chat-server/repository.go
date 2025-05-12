@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Ippolid/chat-server/internal/client/db"
 	"github.com/Ippolid/chat-server/internal/model"
 	"github.com/Ippolid/chat-server/internal/repository"
+	"github.com/Ippolid/platform_libary/pkg/db"
 	sq "github.com/Masterminds/squirrel"
 )
 

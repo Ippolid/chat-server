@@ -5,15 +5,15 @@ import (
 	"log"
 
 	"github.com/Ippolid/chat-server/internal/api/chatserver"
-	"github.com/Ippolid/chat-server/internal/client/db"
-	"github.com/Ippolid/chat-server/internal/client/db/pg"
-	"github.com/Ippolid/chat-server/internal/client/db/transaction"
-	"github.com/Ippolid/chat-server/internal/closer"
 	"github.com/Ippolid/chat-server/internal/config"
 	"github.com/Ippolid/chat-server/internal/repository"
 	chat_server "github.com/Ippolid/chat-server/internal/repository/chat-server"
 	"github.com/Ippolid/chat-server/internal/service"
 	chat_service "github.com/Ippolid/chat-server/internal/service/chatserver"
+	"github.com/Ippolid/platform_libary/pkg/closer"
+	"github.com/Ippolid/platform_libary/pkg/db"
+	"github.com/Ippolid/platform_libary/pkg/db/pg"
+	"github.com/Ippolid/platform_libary/pkg/db/transaction"
 )
 
 type serviceProvider struct {
