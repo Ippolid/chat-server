@@ -16,7 +16,7 @@ func (s *serv) SendMessage(ctx context.Context, info *model.MessageInfo) error {
 		}
 
 		err := s.chatserverRepository.MakeLog(ctx, model.Log{
-			Method:    "Update",
+			Method:    "SendMessage",
 			CreatedAt: time.Now(),
 			Ctx:       fmt.Sprintf("%v", ctx),
 		})
