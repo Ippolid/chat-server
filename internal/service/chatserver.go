@@ -12,3 +12,7 @@ type ChatServerService interface {
 	Delete(ctx context.Context, id int64) error
 	SendMessage(ctx context.Context, info *model.MessageInfo) error
 }
+
+type Access interface {
+	Access(ctx context.Context, path string) error
+}

@@ -2,31 +2,42 @@ package app
 
 import (
 	"context"
-	"log"
-
+	"fmt"
+	"github.com/Ippolid/auth/pkg/auth_v1"
 	"github.com/Ippolid/chat-server/internal/api/chatserver"
 	"github.com/Ippolid/chat-server/internal/config"
+	accessInterceptor "github.com/Ippolid/chat-server/internal/interceptor/access"
 	"github.com/Ippolid/chat-server/internal/repository"
+	"github.com/Ippolid/chat-server/internal/repository/auth"
 	chat_server "github.com/Ippolid/chat-server/internal/repository/chat-server"
 	"github.com/Ippolid/chat-server/internal/service"
+	"github.com/Ippolid/chat-server/internal/service/access"
 	chat_service "github.com/Ippolid/chat-server/internal/service/chatserver"
 	"github.com/Ippolid/platform_libary/pkg/closer"
 	"github.com/Ippolid/platform_libary/pkg/db"
 	"github.com/Ippolid/platform_libary/pkg/db/pg"
 	"github.com/Ippolid/platform_libary/pkg/db/transaction"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
+	"log"
+	"os"
 )
 
 type serviceProvider struct {
 	pgConfig   config.PGConfig
 	grpcConfig config.GRPCConfig
 
-	dbClient       db.Client
-	txManager      db.TxManager
-	noteRepository repository.ChatServerRepository
+	dbClient         db.Client
+	txManager        db.TxManager
+	noteRepository   repository.ChatServerRepository
+	accessRepository repository.Access
+	authClient       auth_v1.AuthClient
 
-	noteService service.ChatServerService
+	noteService   service.ChatServerService
+	accessService service.Access
 
-	noteController *chatserver.Controller
+	noteController  *chatserver.Controller
+	authInterceptor *accessInterceptor.AuthInterceptor
 }
 
 func newServiceProvider() *serviceProvider {
@@ -87,6 +98,64 @@ func (s *serviceProvider) TxManager(ctx context.Context) db.TxManager {
 	return s.txManager
 }
 
+//	func (s *serviceProvider) GetAuthClient() auth_v1.AuthClient {
+//		if s.authClient == nil {
+//			conn, err := grpc.Dial("127.0.0.1:50051", grpc.WithInsecure())
+//			if err != nil {
+//				log.Fatalf("did not connect: %v", err)
+//			}
+//			closer.Add(conn.Close)
+//
+//			s.authClient = auth_v1.NewAuthClient(conn)
+//		}
+//
+//		return s.authClient
+//	}
+func (s *serviceProvider) GetAuthClient() auth_v1.AuthClient {
+	if s.authClient == nil {
+		// Вариант 1a: Загрузить клиентские сертификаты (если есть взаимная аутентификация)
+		creds, err := credentials.NewClientTLSFromFile(
+			"../../server_cert.pem", // путь к серверному сертификату
+			"localhost",             // serverName (можно оставить пустым для localhost)
+		)
+		if err != nil {
+			log.Fatalf("failed to load TLS credentials: %v", err)
+		}
+
+		authAddr := os.Getenv("AUTH_SERVER_ADDR")
+		if authAddr == "" {
+			authAddr = "host.docker.internal:50051"
+		}
+
+		conn, err := grpc.Dial(authAddr, grpc.WithTransportCredentials(creds))
+		fmt.Println(conn, err)
+		if err != nil {
+			log.Fatalf("did not connect: %v", err)
+		}
+		closer.Add(conn.Close)
+
+		s.authClient = auth_v1.NewAuthClient(conn)
+	}
+
+	return s.authClient
+}
+
+func (s *serviceProvider) GetAccessRepository(_ context.Context) repository.Access {
+	if s.accessRepository == nil {
+		s.accessRepository = auth.NewAccessRepo(s.GetAuthClient())
+	}
+
+	return s.accessRepository
+}
+
+func (s *serviceProvider) GetAccessService(ctx context.Context) service.Access {
+	if s.accessService == nil {
+		s.accessService = access.NewAccessService(s.GetAccessRepository(ctx))
+	}
+
+	return s.accessService
+}
+
 func (s *serviceProvider) AuthRepository(ctx context.Context) repository.ChatServerRepository {
 	if s.noteRepository == nil {
 		s.noteRepository = chat_server.NewRepository(s.DBClient(ctx))
@@ -112,4 +181,12 @@ func (s *serviceProvider) NoteController(ctx context.Context) *chatserver.Contro
 	}
 
 	return s.noteController
+}
+
+func (s *serviceProvider) GetAuthInterceptor(ctx context.Context) accessInterceptor.AuthInterceptor {
+	if s.authInterceptor == nil {
+		s.authInterceptor = accessInterceptor.NewAuthInterceptor(s.GetAccessService(ctx))
+	}
+
+	return *s.authInterceptor
 }

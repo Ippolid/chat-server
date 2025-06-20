@@ -13,3 +13,7 @@ type ChatServerRepository interface {
 	SendMessage(ctx context.Context, message model.MessageInfo) error
 	MakeLog(ctx context.Context, log model.Log) error
 }
+
+type Access interface {
+	Access(ctx context.Context, path string) error
+}

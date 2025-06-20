@@ -3,6 +3,8 @@ package app
 import (
 	"context"
 	"fmt"
+	"github.com/Ippolid/chat-server/internal/interceptor"
+	"google.golang.org/grpc/credentials/insecure"
 	"log"
 	"net"
 
@@ -76,7 +78,9 @@ func (a *App) initServiceProvider(_ context.Context) error {
 }
 
 func (a *App) initGRPCServer(ctx context.Context) error {
-	a.grpcServer = grpc.NewServer()
+	interceptors := grpc.ChainUnaryInterceptor(interceptor.ValidateInterceptor, a.serviceProvider.GetAuthInterceptor(ctx).AccessInterceptor)
+
+	a.grpcServer = grpc.NewServer(grpc.Creds(insecure.NewCredentials()), interceptors)
 
 	reflection.Register(a.grpcServer)
 

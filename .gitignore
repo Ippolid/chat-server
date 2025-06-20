@@ -6,3 +6,4 @@ service_linux
 /cmd/grpc_server/main1.txt
 generate.go
 /coverage.out
+./deploy/server_cert.pem
