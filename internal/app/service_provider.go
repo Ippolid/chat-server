@@ -3,6 +3,9 @@ package app
 import (
 	"context"
 	"fmt"
+	"log"
+	"os"
+
 	"github.com/Ippolid/auth/pkg/auth_v1"
 	"github.com/Ippolid/chat-server/internal/api/chatserver"
 	"github.com/Ippolid/chat-server/internal/config"
@@ -19,8 +22,6 @@ import (
 	"github.com/Ippolid/platform_libary/pkg/db/transaction"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
-	"log"
-	"os"
 )
 
 type serviceProvider struct {
@@ -98,19 +99,6 @@ func (s *serviceProvider) TxManager(ctx context.Context) db.TxManager {
 	return s.txManager
 }
 
-//	func (s *serviceProvider) GetAuthClient() auth_v1.AuthClient {
-//		if s.authClient == nil {
-//			conn, err := grpc.Dial("127.0.0.1:50051", grpc.WithInsecure())
-//			if err != nil {
-//				log.Fatalf("did not connect: %v", err)
-//			}
-//			closer.Add(conn.Close)
-//
-//			s.authClient = auth_v1.NewAuthClient(conn)
-//		}
-//
-//		return s.authClient
-//	}
 func (s *serviceProvider) GetAuthClient() auth_v1.AuthClient {
 	if s.authClient == nil {
 		// Вариант 1a: Загрузить клиентские сертификаты (если есть взаимная аутентификация)

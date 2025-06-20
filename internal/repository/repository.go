@@ -14,6 +14,7 @@ type ChatServerRepository interface {
 	MakeLog(ctx context.Context, log model.Log) error
 }
 
+// Access интерфейс для работы с доступом
 type Access interface {
 	Access(ctx context.Context, path string) error
 }

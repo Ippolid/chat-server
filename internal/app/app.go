@@ -3,10 +3,11 @@ package app
 import (
 	"context"
 	"fmt"
-	"github.com/Ippolid/chat-server/internal/interceptor"
-	"google.golang.org/grpc/credentials/insecure"
 	"log"
 	"net"
+
+	"github.com/Ippolid/chat-server/internal/interceptor"
+	"google.golang.org/grpc/credentials/insecure"
 
 	"github.com/Ippolid/chat-server/internal/config"
 	"github.com/Ippolid/chat-server/pkg/chatserver_v1"

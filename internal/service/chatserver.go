@@ -13,6 +13,7 @@ type ChatServerService interface {
 	SendMessage(ctx context.Context, info *model.MessageInfo) error
 }
 
+// Access интерфейс для работы с доступом
 type Access interface {
 	Access(ctx context.Context, path string) error
 }
