@@ -34,10 +34,10 @@ type serviceProvider struct {
 	accessRepository repository.Access
 	authClient       auth_v1.AuthClient
 
-	noteService   service.ChatServerService
+	chatService   service.ChatServerService
 	accessService service.Access
 
-	noteController  *chatserver.Controller
+	chatController  *chatserver.Controller
 	authInterceptor *accessInterceptor.AuthInterceptor
 }
 
@@ -153,22 +153,22 @@ func (s *serviceProvider) AuthRepository(ctx context.Context) repository.ChatSer
 }
 
 func (s *serviceProvider) AuthService(ctx context.Context) service.ChatServerService {
-	if s.noteService == nil {
-		s.noteService = chat_service.NewService(
+	if s.chatService == nil {
+		s.chatService = chat_service.NewService(
 			s.AuthRepository(ctx),
 			s.TxManager(ctx),
 		)
 	}
 
-	return s.noteService
+	return s.chatService
 }
 
 func (s *serviceProvider) NoteController(ctx context.Context) *chatserver.Controller {
-	if s.noteController == nil {
-		s.noteController = chatserver.NewController(s.AuthService(ctx))
+	if s.chatController == nil {
+		s.chatController = chatserver.NewController(s.AuthService(ctx))
 	}
 
-	return s.noteController
+	return s.chatController
 }
 
 func (s *serviceProvider) GetAuthInterceptor(ctx context.Context) accessInterceptor.AuthInterceptor {
