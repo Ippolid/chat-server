@@ -3,7 +3,7 @@ module github.com/Ippolid/chat-server
 go 1.23.3
 
 require (
-	github.com/Ippolid/auth v0.0.0-20250509125844-7999849423b6
+	github.com/Ippolid/auth v0.0.0-20250618113147-165e5a78335c
 	github.com/Ippolid/platform_libary v0.0.0-20250505000918-131ae6648be2
 	github.com/Masterminds/squirrel v1.5.4
 	github.com/brianvoe/gofakeit/v6 v6.28.0
@@ -19,6 +19,7 @@ require (
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/envoyproxy/protoc-gen-validate v1.2.1 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
 	github.com/jackc/puddle/v2 v2.2.2 // indirect
