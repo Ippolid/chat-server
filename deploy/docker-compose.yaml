@@ -26,6 +26,8 @@ services:
       context: ..
       dockerfile: deploy/Dockerfile
     restart: on-failure
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "50052:50052"
     environment:
@@ -37,3 +39,5 @@ services:
     depends_on:
       - pg-local-chat
       - migrator-local-chat
+    volumes:
+      - ./server_cert.pem:/server_cert.pem:ro
